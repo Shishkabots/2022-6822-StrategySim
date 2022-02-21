@@ -1,0 +1,202 @@
+## this version of python can only be run in CMU CS Academy
+
+
+import random
+
+field = Rect(0, 100, 400, 200, fill = "grey")
+
+midline = Line(160, 100, 240, 300)
+hub = Rect(175, 175, 50, 50, rotateAngle = -66, fill = None, border = 'black')
+
+
+Label("Score", 200, 30, size = 30)
+bScore = Label(0, 120, 30, fill = "blue", size =30)
+rScore = Label(0, 280, 30, fill = "red", size =30)
+
+balls = []
+def ball(x, y, color):
+    b = Circle(x, y, 5, fill = color)
+    balls.append(b)
+ball(145, 130, "red")
+ball(120, 155, "blue")
+ball(120, 250, "blue")
+ball(106, 211, "red")
+ball(220, 285, "red")
+ball(180, 285, "blue")
+ball(220, 115, "red")
+ball(180, 115, "blue")
+ball(280, 150, "red")
+ball(294, 189, "blue")
+ball(255, 270, "blue")
+ball(280, 245, "red")
+
+
+
+
+
+blues = []
+bBot1 = Group(Rect(145, 180, 20, 20, fill = "blue"),
+        Label("1", 155, 190, fill = "white", bold = True))
+bBot2 = Group(Rect(150, 223, 20, 20, fill = "blue"),
+        Label("2", 160, 233, fill = "white", bold = True))
+bBot3 = Group(Rect(187, 235, 20, 20, fill = "blue"),
+        Label("3", 197, 245, fill = "white", bold = True))
+blues.append(bBot1)
+blues.append(bBot2)
+blues.append(bBot3)
+
+
+# out blues
+outB = []
+bBalls = []
+ob1 = Group(Rect(20, 310, 20, 20, fill = "blue"),
+        Label("1", 30, 320, fill = "white", bold = True))
+bBalls1 = []
+ob2 = Group(Rect(20, 340, 20, 20, fill = "blue"),
+        Label("2", 30, 350, fill = "white", bold = True))
+bBalls2 = []
+ob3 = Group(Rect(20, 370, 20, 20, fill = "blue"),
+        Label("3", 30, 380, fill = "white", bold = True))
+bBalls3 = []
+bBalls.append(bBalls1)
+bBalls.append(bBalls2)
+bBalls.append(bBalls3)
+outB.append(ob1)
+outB.append(ob2)
+outB.append(ob2)
+
+
+reds = []
+rBot1 = Group(Rect(205, 145, 20, 20, fill = "red"),
+        Label(1, 215, 155, fill = "white", bold = True))
+rBot2 = Group(Rect(240, 180, 20, 20, fill = "red"),
+        Label(2, 250, 190, fill = "white", bold = True))
+rBot3 = Group(Rect(230, 215, 20, 20, fill = "red"),
+        Label(3, 240, 225, fill = "white", bold = True))
+reds.append(rBot1)
+reds.append(rBot2)
+reds.append(rBot3)
+
+
+# out reds
+outR = []
+rBalls = []
+or1 = Group(Rect(220, 310, 20, 20, fill = "red"),
+        Label(1, 230, 320, fill = "white", bold = True))
+rBalls1 = []
+or2 = Group(Rect(220, 340, 20, 20, fill = "red"),
+        Label(2, 230, 350, fill = "white", bold = True))
+rBalls2 = []
+or3 = Group(Rect(220, 370, 20, 20, fill = "red"),
+        Label(3, 230, 380, fill = "white", bold = True))
+rBalls3 = []
+rBalls.append(rBalls1)
+rBalls.append(rBalls2)
+rBalls.append(rBalls3)
+outR.append(or1)
+outR.append(or3)
+outR.append(or3)
+
+
+app.color = "blue"
+app.num = 0
+def onMousePress(mouseX, mouseY):
+    if (bBot1.hits(mouseX, mouseY)):
+        app.color = "blue"
+        app.num = 0
+    elif (bBot2.hits(mouseX, mouseY)):
+        app.color = "blue"
+        app.num = 1
+    elif (bBot3.hits(mouseX, mouseY)):
+        app.color = "blue"
+        app.num = 2
+    elif (rBot1.hits(mouseX, mouseY)):
+        app.color = "red"
+        app.num = 0
+    elif (rBot2.hits(mouseX, mouseY)):
+        app.color = "red"
+        app.num = 1
+    elif (rBot3.hits(mouseX, mouseY)):
+        app.color = "red"
+        app.num = 2
+        
+
+app.start = False
+app.step = False
+app.direction = 0
+def onKeyPress(key):
+    if (app.color == "blue"):
+        if (key=="right"):
+            blues[app.num].centerX+=5
+        elif (key=="left"):
+            blues[app.num].centerX-=5
+        elif (key=="up"):
+            blues[app.num].centerY-=5
+        elif (key=="down"):
+            blues[app.num].centerY+=5
+        
+        
+        if ((key == "1" or key == "2") and len(bBalls[app.num])>0):
+            if (bBalls[app.num][0].fill == "blue"):
+                bScore.value+=int(key)
+                app.direction = random.randint(1, 4)
+                #print(app.direction)
+            bBalls[app.num][0].centerX = 200
+            bBalls[app.num][0].centerY = 200
+            bBalls[app.num].remove(bBalls[app.num][0])
+            if (len(bBalls[app.num])>0):
+                bBalls[app.num][0].centerX -= 20
+
+            
+        for i in range(len(balls)):
+            for a in range(len(blues)):
+                if (balls[i].hitsShape(blues[a]) and len(bBalls[app.num])<2):
+                    balls[i].centerY = 320 + 30*app.num
+                    balls[i].centerX = 60 + 20*len(bBalls[app.num])
+                    bBalls[app.num].append(balls[i])
+                    
+        
+        
+    elif (app.color == "red"):
+        if (key=="right"):
+            reds[app.num].centerX+=5
+        elif (key=="left"):
+            reds[app.num].centerX-=5
+        elif (key=="up"):
+            reds[app.num].centerY-=5
+        elif (key=="down"):
+            reds[app.num].centerY+=5
+
+        elif ((key == "1" or key == "2" or key == "0") and len(rBalls[app.num])>0):
+            if (rBalls[app.num][0].fill == "red"):
+                rScore.value+=int(key)
+            rBalls[app.num][0].centerX = 200
+            rBalls[app.num][0].centerY = 200
+            rBalls[app.num].remove(rBalls[app.num][0])
+            if (len(rBalls[app.num])>0):
+                rBalls[app.num][0].centerX -= 20
+        
+
+            
+        for i in range(len(balls)):
+            for a in range(len(reds)):
+                if (balls[i].hitsShape(reds[a]) and len(rBalls[app.num])<2):
+                    balls[i].centerY = 320 + 30*app.num
+                    balls[i].centerX = 260 + 20*len(rBalls[app.num])
+                    rBalls[app.num].append(balls[i])
+                    
+                    
+                    
+#def onStep():
+       # if(app.direction==1):
+      #      bBalls[app.num][0].centerX = 189
+     #       bBalls[app.num][0].centerY = 171
+    #    elif(app.direction==2):
+          #  bBalls[app.num][0].centerX = 232
+         #   bBalls[app.num][0].centerY = 189
+        #elif(app.direction==3):
+          #  bBalls[app.num][0].centerX = 213
+         #   bBalls[app.num][0].centerY = 233
+        #elif(app.direction==4):
+            #bBalls[app.num][0].centerX = 169
+            #bBalls[app.num][0].centerY = 214
