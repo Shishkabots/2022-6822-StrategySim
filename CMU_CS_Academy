@@ -13,13 +13,16 @@ Label("Score", 200, 30, size = 30)
 bScore = Label(0, 120, 30, fill = "blue", size =30)
 rScore = Label(0, 280, 30, fill = "red", size =30)
 
-bs1 = Label("+1", 85, 65, fill = "blue", size = 20)
-bs2 = Label("+2", 120, 65, fill = "blue", size = 20)
-bs4 = Label("+4", 155, 65, fill = "blue", size = 20)
+bs1 = Label("+1", 50, 65, fill = "blue", size = 20)
+bs2 = Label("+2", 85, 65, fill = "blue", size = 20)
+bs4 = Label("+4", 120, 65, fill = "blue", size = 20)
+bs5 = Label("+5", 155, 65, fill = "blue", size = 20)
+
 
 rs1 = Label("+1", 245, 65, fill = "red", size = 20)
 rs2 = Label("+2", 280, 65, fill = "red", size = 20)
 rs4 = Label("+4", 315, 65, fill = "red", size = 20)
+rs5 = Label("+5", 350, 65, fill = "red", size = 20)
 
 balls = []
 def ball(x, y, color):
@@ -134,12 +137,16 @@ def onMousePress(mouseX, mouseY):
         bScore.value+=2
     elif (bs4.hits(mouseX, mouseY)):
         bScore.value+=4
+    elif (bs5.hits(mouseX, mouseY)):
+        bScore.value+=5
     elif (rs1.hits(mouseX, mouseY)):
         rScore.value+=1
     elif (rs2.hits(mouseX, mouseY)):
         rScore.value+=2
     elif (rs4.hits(mouseX, mouseY)):
         rScore.value+=4
+    elif (rs5.hits(mouseX, mouseY)):
+        rScore.value+=5
     
     
         
