@@ -1,7 +1,7 @@
-## this version of python can only be run in CMU CS Academy
-
-
+## alliance area: 30ft(914cm) by 8ft 10in(269cm)
+## 
 import random
+
 
 field = Rect(0, 100, 400, 200, fill = "grey")
 
@@ -12,6 +12,8 @@ hub = Rect(175, 175, 50, 50, rotateAngle = -66, fill = None, border = 'black')
 Label("Score", 200, 30, size = 30)
 bScore = Label(0, 120, 30, fill = "blue", size =30)
 rScore = Label(0, 280, 30, fill = "red", size =30)
+
+
 
 balls = []
 def ball(x, y, color):
@@ -120,7 +122,8 @@ def onMousePress(mouseX, mouseY):
         app.color = "red"
         app.num = 2
         
-
+app.dy = 0
+app.dx = 0
 app.start = False
 app.step = False
 app.direction = 0
@@ -140,9 +143,26 @@ def onKeyPress(key):
             if (bBalls[app.num][0].fill == "blue"):
                 bScore.value+=int(key)
                 app.direction = random.randint(1, 4)
-                #print(app.direction)
-            bBalls[app.num][0].centerX = 200
-            bBalls[app.num][0].centerY = 200
+                balls.remove(bBalls[app.num][0])
+                balls.append(bBalls[app.num][0])
+                app.step = True
+                app.y = 0
+                app.x = 0
+                if (app.direction==1):
+                    bBalls[app.num][0].centerX = random.randint(155,191)
+                    bBalls[app.num][0].centerY = random.randint(125,146)
+                if (app.direction==2):
+                    bBalls[app.num][0].centerX = random.randint(260,289)
+                    bBalls[app.num][0].centerY = random.randint(157,192)
+                if (app.direction==3):
+                    bBalls[app.num][0].centerX = random.randint(210,245)
+                    bBalls[app.num][0].centerY = random.randint(258,279)
+                if (app.direction==4):
+                    bBalls[app.num][0].centerX = random.randint(156,195)
+                    bBalls[app.num][0].centerY = random.randint(134,147)
+            else:
+                bBalls[app.num][0].centerX = 200
+                bBalls[app.num][0].centerY = 200
             bBalls[app.num].remove(bBalls[app.num][0])
             if (len(bBalls[app.num])>0):
                 bBalls[app.num][0].centerX -= 20
@@ -155,7 +175,7 @@ def onKeyPress(key):
                     balls[i].centerX = 60 + 20*len(bBalls[app.num])
                     bBalls[app.num].append(balls[i])
                     
-        
+         
         
     elif (app.color == "red"):
         if (key=="right"):
@@ -170,8 +190,24 @@ def onKeyPress(key):
         elif ((key == "1" or key == "2" or key == "0") and len(rBalls[app.num])>0):
             if (rBalls[app.num][0].fill == "red"):
                 rScore.value+=int(key)
-            rBalls[app.num][0].centerX = 200
-            rBalls[app.num][0].centerY = 200
+                app.direction = random.randint(1, 4)
+                balls.remove(rBalls[app.num][0])
+                balls.append(rBalls[app.num][0])
+                if (app.direction==1):
+                    rBalls[app.num][0].centerX = random.randint(155,191)
+                    rBalls[app.num][0].centerY = random.randint(125,146)
+                if (app.direction==2):
+                    rBalls[app.num][0].centerX = random.randint(260,289)
+                    rBalls[app.num][0].centerY = random.randint(157,192)
+                if (app.direction==3):
+                    rBalls[app.num][0].centerX = random.randint(210,245)
+                    rBalls[app.num][0].centerY = random.randint(258,279)
+                if (app.direction==4):
+                    rBalls[app.num][0].centerX = random.randint(156,195)
+                    rBalls[app.num][0].centerY = random.randint(134,147)
+            else:
+                rBalls[app.num][0].centerX = 200
+                rBalls[app.num][0].centerY = 200
             rBalls[app.num].remove(rBalls[app.num][0])
             if (len(rBalls[app.num])>0):
                 rBalls[app.num][0].centerX -= 20
@@ -185,18 +221,26 @@ def onKeyPress(key):
                     balls[i].centerX = 260 + 20*len(rBalls[app.num])
                     rBalls[app.num].append(balls[i])
                     
-                    
-                    
+
+#balls[len(balls)-1].centerX = app.x
+#balls[len(balls)-1].centerY = app.y
 #def onStep():
-       # if(app.direction==1):
-      #      bBalls[app.num][0].centerX = 189
-     #       bBalls[app.num][0].centerY = 171
-    #    elif(app.direction==2):
-          #  bBalls[app.num][0].centerX = 232
-         #   bBalls[app.num][0].centerY = 189
+ #   if (app.step == True):
+  #      balls[len(balls)-1].centerX = app.x
+   #     balls[len(balls)-1].centerY = app.y
+    #    if(app.direction==1):
+     #       balls[len(balls)-1].centerX -= app.dx
+      #      balls[len(balls)-1].centerY -= app.dy
+       # elif(app.direction==2):
+        #    balls[len(balls)-1].centerX += app.dx
+         #   balls[len(balls)-1].centerY -= app.dy
         #elif(app.direction==3):
-          #  bBalls[app.num][0].centerX = 213
-         #   bBalls[app.num][0].centerY = 233
+         #   balls[len(balls)-1].centerX += app.dx
+          #  balls[len(balls)-1].centerY += app.dy
         #elif(app.direction==4):
-            #bBalls[app.num][0].centerX = 169
-            #bBalls[app.num][0].centerY = 214
+         #   balls[len(balls)-1].centerX -= app.dx
+          #  balls[len(balls)-1].centerY += app.dy
+        #app.dx-=1
+        #app.dy-=1
+        #if (app.dx<0 and app.dy<0):
+         #   app.step = False
