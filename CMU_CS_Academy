@@ -3,10 +3,31 @@
 import random
 
 
+app.instructions = app.getTextInput('Click a robot to control it. Use arrow keys to move the robot. Click "1" to shoot a ball that you picked up by having the robot run into the ball. A max of 2 balls can be picked up. If the ball shot is the same color as the robot, 1 point will ba awarded when "1" is pressed. If not, the ball will be shot a small distance in the direction the robot is facing. "2" shoots the same color ball into the upper hub, and a different color ball will be shot a distance that the user inputs. Also, you can create new blue or red balls by clicking "b" or "r". After pressing, click on the field to add a ball. Repeat this for each ball created.')
+app.max = int(app.getTextInput('How far will the ball be shot when 2 is pressed? Remember to scale for the field width to be 400 and a shot into the lower hub distance shot until the ball stops is 25.'))
+
 field = Rect(0, 100, 400, 200, fill = "grey")
 
 midline = Line(160, 100, 240, 300)
 hub = Rect(175, 175, 50, 50, rotateAngle = -66, fill = None, border = 'black')
+
+bTerminal = Polygon(400, 142, 400, 100, 358, 100, fill = "white")
+rTerminal = Polygon(0, 258, 42, 300, 0, 300, fill = "white")
+
+bHanger = Group(Rect(0, 100, 79.4654, 71.6889, border = "blue", fill = None),
+            Line(83, 100, 83, 171.6889),
+            Line(83-9-22.4787+2.5, 100, 83-22.4787-9+2.5, 171.6889),
+            Line(83-9-22.4787-14.8238+2.5, 100, 83-9-22.4787-14.8238+2.5, 171.6889),
+            Line(83-9-22.4787-14.8238-14.8238+2.5, 100, 83-9-22.4787-14.8238-14.8238+2.5, 171.6889))
+rHanger = Group(Rect(400-79.4654, 300-71.6889, 79.4654, 71.6889, border = "red", fill = None),
+            Line(400-83, 400-100, 400-83, 400-171.6889),
+            Line(400-83+9+22.4787-2.5, 400-100, 400-83+22.4787+9-2.5, 400-171.6889),
+            Line(400-83+9+22.4787+14.8238-2.5, 400-100, 400-83+9+22.4787+14.8238-2.5, 400-171.6889),
+            Line(400-83+9+22.4787+14.8238+14.8238-2.5, 400-100, 400-83+9+22.4787+14.8238+14.8238-2.5, 400-171.6889))
+
+
+bCargoLine = Line(7.407, 258-22.22, 7.407, 258)
+rCargoLine = Line(400-7.407, 164-22.22, 400-7.407, 164)
 
 
 Label("Score", 200, 30, size = 30)
@@ -108,10 +129,20 @@ outR.append(or1)
 outR.append(or3)
 outR.append(or3)
 
+app.bb = False
+app.rb = False
 
 app.color = "blue"
 app.num = 0
 def onMousePress(mouseX, mouseY):
+    
+    if (app.rb==True):
+        app.rb = False
+        ball(mouseX, mouseY, "red")
+    if (app.bb==True):
+        app.bb = False
+        ball(mouseX, mouseY, "blue")
+    
     if (bBot1.hits(mouseX, mouseY)):
         app.color = "blue"
         app.num = 0
@@ -154,17 +185,32 @@ app.dy = 0
 app.dx = 0
 app.start = False
 app.step = False
+app.face = "right"
 app.direction = 0
 def onKeyPress(key):
+    if (key == "r"):
+        if (app.rb == True):
+            app.rb = False
+        if (app.rb == False):
+            app.rb = True    
+    if (key == "b"):
+        if (app.rb == True):
+            app.rb = False
+        if (app.rb == False):
+            app.bb = True
     if (app.color == "blue"):
         if (key=="right"):
             blues[app.num].centerX+=5
+            app.face = "right"
         elif (key=="left"):
             blues[app.num].centerX-=5
+            app.face = "left"
         elif (key=="up"):
             blues[app.num].centerY-=5
+            app.face = "up"
         elif (key=="down"):
             blues[app.num].centerY+=5
+            app.face = "down"
         
         
         if ((key == "1" or key == "2") and len(bBalls[app.num])>0):
@@ -189,8 +235,64 @@ def onKeyPress(key):
                     bBalls[app.num][0].centerX = random.randint(156,195)
                     bBalls[app.num][0].centerY = random.randint(134,147)
             else:
-                bBalls[app.num][0].centerX = 200
-                bBalls[app.num][0].centerY = 200
+                if (key == "1"):
+                    if (app.face == "right"):
+                        if (reds[app.num].centerX+25<395):
+                            bBalls[app.num][0].centerX=blues[app.num].centerX+25
+                            bBalls[app.num][0].centerY=blues[app.num].centerY
+                        else:
+                            bBalls[app.num][0].centerX = 395
+                            bBalls[app.num][0].centerY = blues[app.num].centerY
+                    if (app.face == "left"):
+                        if (reds[app.num].centerX-25>5):
+                            bBalls[app.num][0].centerX=blues[app.num].centerX-25
+                            bBalls[app.num][0].centerY=blues[app.num].centerY
+                        else:
+                            bBalls[app.num][0].centerX = 5
+                            bBalls[app.num][0].centerY = blues[app.num].centerY
+                    if (app.face == "up"):
+                        if (reds[app.num].centerY-25>105):
+                            bBalls[app.num][0].centerY=blues[app.num].centerY-25
+                            bBalls[app.num][0].centerX=blues[app.num].centerX
+                        else:
+                            bBalls[app.num][0].centerY = 105
+                            bBalls[app.num][0].centerX = blues[app.num].centerX
+                    if (app.face == "down"):
+                        if (reds[app.num].centerY+25<295):
+                            bBalls[app.num][0].centerY=blues[app.num].centerY+25
+                            bBalls[app.num][0].centerX=blues[app.num].centerX
+                        else:
+                            bBalls[app.num][0].centerY = 295
+                            bBalls[app.num][0].centerX = blues[app.num].centerX
+                elif (key=="2"):
+                    if (app.face == "right"):
+                        if (reds[app.num].centerX+app.max<395):
+                            bBalls[app.num][0].centerX=blues[app.num].centerX+app.max
+                            bBalls[app.num][0].centerY=blues[app.num].centerY
+                        else:
+                            bBalls[app.num][0].centerX = 395
+                            bBalls[app.num][0].centerY = blues[app.num].centerY
+                    if (app.face == "left"):
+                        if (reds[app.num].centerX-app.max>5):
+                            bBalls[app.num][0].centerX=blues[app.num].centerX-app.max
+                            bBalls[app.num][0].centerY=blues[app.num].centerY
+                        else:
+                            bBalls[app.num][0].centerX = 5
+                            bBalls[app.num][0].centerY = blues[app.num].centerY
+                    if (app.face == "up"):
+                        if (reds[app.num].centerY-app.max>105):
+                            bBalls[app.num][0].centerY=blues[app.num].centerY-app.max
+                            bBalls[app.num][0].centerX=blues[app.num].centerX
+                        else:
+                            bBalls[app.num][0].centerY = 105
+                            bBalls[app.num][0].centerX = blues[app.num].centerX
+                    if (app.face == "down"):
+                        if (reds[app.num].centerY+app.max<295):
+                            bBalls[app.num][0].centerY=blues[app.num].centerY+app.max
+                            bBalls[app.num][0].centerX=blues[app.num].centerX
+                        else:
+                            bBalls[app.num][0].centerY = 295
+                            bBalls[app.num][0].centerX = blues[app.num].centerX
             bBalls[app.num].remove(bBalls[app.num][0])
             if (len(bBalls[app.num])>0):
                 bBalls[app.num][0].centerX -= 20
@@ -208,12 +310,16 @@ def onKeyPress(key):
     elif (app.color == "red"):
         if (key=="right"):
             reds[app.num].centerX+=5
+            app.face = "right"
         elif (key=="left"):
             reds[app.num].centerX-=5
+            app.face = "left"
         elif (key=="up"):
             reds[app.num].centerY-=5
+            app.face = "up"
         elif (key=="down"):
             reds[app.num].centerY+=5
+            app.face = "down"
 
         elif ((key == "1" or key == "2" or key == "0") and len(rBalls[app.num])>0):
             if (rBalls[app.num][0].fill == "red"):
@@ -234,8 +340,65 @@ def onKeyPress(key):
                     rBalls[app.num][0].centerX = random.randint(156,195)
                     rBalls[app.num][0].centerY = random.randint(134,147)
             else:
-                rBalls[app.num][0].centerX = 200
-                rBalls[app.num][0].centerY = 200
+                if (key == "1"):
+                    if (app.face == "right"):
+                        if (reds[app.num].centerX+25<395):
+                            rBalls[app.num][0].centerX=reds[app.num].centerX+25
+                            rBalls[app.num][0].centerY=reds[app.num].centerY
+                        else:
+                            rBalls[app.num][0].centerX = 395
+                            rBalls[app.num][0].centerY = reds[app.num].centerY
+                    if (app.face == "left"):
+                        if (reds[app.num].centerX-25>5):
+                            rBalls[app.num][0].centerX=reds[app.num].centerX-25
+                            rBalls[app.num][0].centerY=reds[app.num].centerY
+                        else:
+                            rBalls[app.num][0].centerX = 5
+                            rBalls[app.num][0].centerY = reds[app.num].centerY
+                    if (app.face == "up"):
+                        if (reds[app.num].centerY-25>105):
+                            rBalls[app.num][0].centerY=reds[app.num].centerY-25
+                            rBalls[app.num][0].centerX=reds[app.num].centerX
+                        else:
+                            rBalls[app.num][0].centerY = 105
+                            rBalls[app.num][0].centerX = reds[app.num].centerX
+                    if (app.face == "down"):
+                        if (reds[app.num].centerY+25<295):
+                            rBalls[app.num][0].centerY=reds[app.num].centerY+25
+                            rBalls[app.num][0].centerX=reds[app.num].centerX
+                        else:
+                            rBalls[app.num][0].centerY = 295
+                            rBalls[app.num][0].centerX = reds[app.num].centerX
+                elif (key=="2"):
+                    if (app.face == "right"):
+                        if (reds[app.num].centerX+app.max<395):
+                            rBalls[app.num][0].centerX=reds[app.num].centerX+app.max
+                            rBalls[app.num][0].centerY=reds[app.num].centerY
+                        else:
+                            rBalls[app.num][0].centerX = 395
+                            rBalls[app.num][0].centerY = reds[app.num].centerY
+                    if (app.face == "left"):
+                        if (reds[app.num].centerX-app.max>5):
+                            rBalls[app.num][0].centerX=reds[app.num].centerX-app.max
+                            rBalls[app.num][0].centerY=reds[app.num].centerY
+                        else:
+                            rBalls[app.num][0].centerX = 5
+                            rBalls[app.num][0].centerY = reds[app.num].centerY
+                    if (app.face == "up"):
+                        if (reds[app.num].centerY-app.max>105):
+                            rBalls[app.num][0].centerY=reds[app.num].centerY-app.max
+                            rBalls[app.num][0].centerX=reds[app.num].centerX
+                        else:
+                            rBalls[app.num][0].centerY = 105
+                            rBalls[app.num][0].centerX = reds[app.num].centerX
+                    if (app.face == "down"):
+                        if (reds[app.num].centerY+app.max<295):
+                            rBalls[app.num][0].centerY=reds[app.num].centerY+app.max
+                            rBalls[app.num][0].centerX=reds[app.num].centerX
+                        else:
+                            rBalls[app.num][0].centerY = 295
+                            rBalls[app.num][0].centerX = reds[app.num].centerX
+
             rBalls[app.num].remove(rBalls[app.num][0])
             if (len(rBalls[app.num])>0):
                 rBalls[app.num][0].centerX -= 20
